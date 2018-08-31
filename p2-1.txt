@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <math.h> //Incluimos a biblioteca de math porque utilizaremos la raíz cuadrada en la desviación estándar. Hubiera sido lo mismo si utilizaba potencias. Por lo que al compilar hay que recordar utilizar la terminacion -lm
+
+int main()
+{
+     int marks[10], array[10], i, j, k, n, sum = 0, var = 0, sum1 = 0, var1 = 0, moda, mediana, promedio, covar, varianza, desv, regr, regr2, regr1, operacion, x; 
+     printf("Saludos, soy la calculadora del proyecto 2. Por favor, ingrese la cantidad de elementos que desea evaluar\n");
+     scanf("%d", &n);
+     for(i=0; i<n; ++i) //Aqui inicializamos lo que sería donde realizamos la mayoría de las operaciones. Con un for vamos ir acumulando los n datos que el usuario desee evaluar, y a cada valor le iremos haciendo una operacion. Por lo que en si el programa ya hizo todas las operaciones desde antes de que el usuario elija alguna. Esto es de utilidad ya que hay operaciones que utilizan valores de otras operaciones, por lo que al tener todos los valores disponibles puedo simplemente acudir a ellos en lugar de repetir toda la operación en cada case del switch. 
+     {
+          printf("Escriba el número %d: ",i+1);
+          scanf("%d", &marks[i]);
+          sum += marks[i];  //Aqui asignamos una suma de todos los valores ingresados
+	  var += (marks[i]*marks[i]); //Aqui asignamos una suma de cuadrados de todos los valores asignados..
+	  sum1 += i;  //Aqui asignamos una suma del número de itiraciones utilizadas.
+	  var1 += i*i; //Analogo, una suma de cuadrados de las itiraciones utilizadas.
+	  promedio = sum/n;  //Usando la suma declarada se vuelve entonces muy sencillo buscar el promedio sin tener que asignar una variable a cada valor ingresado. Gracias al for.
+	  varianza = (var + (n*promedio*promedio) - 2*sum*promedio)/n; //Y aqui es como comentabamos, en la varianza podemos invocar el promedio ya calculado para facilitar la ecuación escrita. Como comentario adicional esta ecuación es un desarrollo algebraico de la definicion de varianza, ya que se buscó una manera de utilizar la suma de cuadrados asi como el promedio ya calculado.
+	  desv = sqrt(varianza);
+	  covar = (varianza*var1);
+	  regr = (covar/varianza);
+	  regr1 = (covar/varianza)*promedio;
+	  regr2 = sum1 - regr1;  //Y aquí como comentabamos,volvemos a utilizar valores ya encontrados, que a su vez están basados en otras operaciones ya realizadas. Por lo que la mayoría de operaciones solicitadas (exceptuando la mediana y moda), pudieron ser escritas en solo 11 líneas.
+
+     }
+
+     printf("Estas son las operaciones que te puedo brindar: \n");
+     printf("1. Moda (No disponible) \n");  //No supe como con las operaciones booleanas acomodar y analizar frecuencias de valores, por lo que me faltó esta operación.
+     printf("2. Mediana (No disponible) \n");
+     printf("3. Promedio \n");
+     printf("4. Varianza \n");
+     printf("5. Desviacion Estandar \n");
+     printf("6. Regresion Lineal \n");
+     printf("7. Salir\n"); 
+     printf("¿Qué operación desea hacer? Por favor, teclee el número correspondiente.\n");
+     scanf("%d",&operacion);
+
+//A continuación ya solo es un simple arreglo de switch donde solo imprimirá el valor electo, de todos los ya calculados. Por lo que el switch en su mayoría se limitaba a ser prints. Como todas las operaciones hacen uso de multiplicacion y division, para mayor precision opté por dejar los resultados como variables float con dos decimales.
+
+     switch(operacion) {
+   
+        case 1:  	//Como comentaba, intenté controlar las frecuencias para poderlas ordenar pero mi código a veces funcionaba, a veces no, y siempre imprimía demasiadas veces la respuesta. Por lo que opté por mejor utilizar el tiempo para terminar las demás operaciones.
+	       {	
+		int rango;
+		int mas_grande=0;
+		int valor_moda;
+		int frecuencias[10] = {0};
+			for ( i = 0; i < 10; i++ ) { 
+				frecuencias[ marks[i] ]++;
+			}
+
+ 			for ( rango = 1; rango <= 10; rango++ ) {
+				if ( frecuencias[rango] > mas_grande ) {
+				mas_grande = frecuencias[rango];
+				valor_moda = rango;
+				}
+		printf( "El valor moda es %d\n", valor_moda );
+		}}
+		break;
+	case 2:
+		break;
+	case 3:
+		printf("El promedio es = %.2f \n", (float) promedio);
+		break;
+	case 4:
+		printf("La varianza es = %.2f \n", (float) varianza);
+		break;
+	case 5:
+		printf("La desviacion estándar es = %.2f\n", (float) desv);
+		break;
+
+	case 6: 
+		printf("La ecuación de la recta de regresión es f(t) = %.2fX + (%.2f\n)", (float) regr, (float) regr2); //Se redujo a la forma canónica de la recta con y = f(t) = pendiente * X + constante
+		printf("\n");
+		printf("Nota: \n");
+		printf("Considera que dado que nos proporcionaste valores de un listado (1 dimension), se tomaron para la segunda dimension (las coordenadas y) las iteraciones que comparten la cardinalidad del listado de elementos.\n");
+		break;
+
+	case 7:
+		printf("Nos vemos. \n"); //Al igual que en el anterior codigo, tuve problemas en qué operador utilizar para repetir todo el ciclo. Por lo que al elegir cualquier operacion y dar el valor el programa termina. Agradecería si se me pudiera asesorar en entender un poco en qué operador utilizar. Gracias.
+		break;
+
+		}
+
+     return 0;
+}
